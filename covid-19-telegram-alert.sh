@@ -6,26 +6,27 @@ COUNTRY="Indonesia"
 TELEGRAM_API_KEY=""
 TELEGRAM_CHAT_ID=""
 
+CURRENTDIR="$(cd "$(dirname "$0")"; pwd)"
+LASTUPDATEFILE="${CURRENTDIR}/.worldometers-corona.log"
+
 function sendTelegram() {
-	printf "Worldometers COVID-19 Alert\n\n" > worldometers-data.tmp
-	printf "**$COUNTRY** COVID-19 new reports\n\n" >> worldometers-data.tmp
-	printf '```\n' >> worldometers-data.tmp
-	printf "Total Cases  : $1\n" >> worldometers-data.tmp
-	printf "New Cases    : $2\n" >> worldometers-data.tmp
-	printf "Total Deaths : $3\n" >> worldometers-data.tmp
-	printf "New Deaths   : $4\n" >> worldometers-data.tmp
-	printf "Recovered    : $5\n" >> worldometers-data.tmp
-	printf "Active Cases : $6\n" >> worldometers-data.tmp
-	printf '```\n' >> worldometers-data.tmp
-	printf "Data by worldometers.info\n" >> worldometers-data.tmp
-	cat worldometers-data.tmp
+	printf "Worldometers COVID-19 Alert\n\n" > ${CURRENTDIR}/worldometers-data.tmp
+	printf "**$COUNTRY** COVID-19 new reports\n\n" >> ${CURRENTDIR}/worldometers-data.tmp
+	printf '```\n' >> ${CURRENTDIR}/worldometers-data.tmp
+	printf "Total Cases  : $1\n" >> ${CURRENTDIR}/worldometers-data.tmp
+	printf "New Cases    : $2\n" >> ${CURRENTDIR}/worldometers-data.tmp
+	printf "Total Deaths : $3\n" >> ${CURRENTDIR}/worldometers-data.tmp
+	printf "New Deaths   : $4\n" >> ${CURRENTDIR}/worldometers-data.tmp
+	printf "Recovered    : $5\n" >> ${CURRENTDIR}/worldometers-data.tmp
+	printf "Active Cases : $6\n" >> ${CURRENTDIR}/worldometers-data.tmp
+	printf '```\n' >> ${CURRENTDIR}/worldometers-data.tmp
+	printf "Data by worldometers.info\n" >> ${CURRENTDIR}/worldometers-data.tmp
+	cat ${CURRENTDIR}/worldometers-data.tmp
 	echo ""
-	urldata=$(python -c "import sys, urllib as ul; print ul.quote_plus(sys.argv[1])" "$(cat worldometers-data.tmp)")
-	rm worldometers-data.tmp
+	urldata=$(python -c "import sys, urllib as ul; print ul.quote_plus(sys.argv[1])" "$(cat ${CURRENTDIR}/worldometers-data.tmp)")
+	rm ${CURRENTDIR}/worldometers-data.tmp
 	curl -s "https://api.telegram.org/bot${TELEGRAM_API_KEY}/sendMessage?chat_id=${TELEGRAM_CHAT_ID}&parse_mode=Markdown&text=${urldata}%20-%20Source%20github.com%2Fpanophan"
 }
-
-LASTUPDATEFILE=".worldometers-corona.log"
 
 RAW=$(curl -s "https://www.worldometers.info/coronavirus/" | sed 's/<tr/\n<tr/g' | grep "${COUNTRY}" | grep ^'<tr' | sed 's/<td/\n<td/g' | grep -v '> </td>' | sed 's/> />/g' | sed 's/ </</g' | sed 's/<!--//g' | grep -Po '>\K.*?(?=<)' | sed ':a;N;$!ba;s/\n/|/g')
 
