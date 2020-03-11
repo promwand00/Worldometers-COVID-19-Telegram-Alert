@@ -1,5 +1,7 @@
 # Worldometers COVID-19 Telegram Alert
 
+Telegram alert for total cases of COVID-19, Coronavirus, or SARS-COV-2.
+
 Data source: <https://worldometers.info/coronavirus/>
 
 ### Based:
@@ -21,3 +23,6 @@ bash covid-19-telegram-alert.sh
 ```
 * * * * * bash /path-to/covid-19-telegram-alert.sh
 ```
+
+### Show Case:
+![Corona Telegram Alert](https://raw.githubusercontent.com/panophan/Worldometers-COVID-19-Telegram-Alert/master/sample-alert.png "COVID-19 telegram alert")
