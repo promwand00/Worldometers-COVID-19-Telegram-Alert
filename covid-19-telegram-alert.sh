@@ -30,12 +30,12 @@ function sendTelegram() {
 
 RAW=$(curl -s "https://www.worldometers.info/coronavirus/" | sed 's/<tr/\n<tr/g' | grep "${COUNTRY}" | grep '<tr style="">' | sed 's/<td/\n<td/g' | grep ^'<td' | sed 's/<!--//g' | sed 's/-->//g')
 
-TC=$(echo "${RAW}" | head -2 | tail -1 | grep -Po '>\K.*?(?=<)')
-NC=$(echo "${RAW}" | head -4 | tail -1 | grep -Po '>\K.*?(?=<)')
-TD=$(echo "${RAW}" | head -5 | tail -1 | grep -Po '>\K.*?(?=<)')
-ND=$(echo "${RAW}" | head -6 | tail -1 | grep -Po '>\K.*?(?=<)')
-RC=$(echo "${RAW}" | head -7 | tail -1 | grep -Po '>\K.*?(?=<)')
-AC=$(echo "${RAW}" | head -9 | tail -1 | grep -Po '>\K.*?(?=<)')
+TC=$(echo "${RAW}" | head -2 | tail -1 | grep -Po '>\K.*?(?=<)' | sed 's/^ //g' | sed 's/ $//g' | sed 's/^$/-/g')
+NC=$(echo "${RAW}" | head -4 | tail -1 | grep -Po '>\K.*?(?=<)' | sed 's/^ //g' | sed 's/ $//g' | sed 's/^$/-/g')
+TD=$(echo "${RAW}" | head -5 | tail -1 | grep -Po '>\K.*?(?=<)' | sed 's/^ //g' | sed 's/ $//g' | sed 's/^$/-/g')
+ND=$(echo "${RAW}" | head -6 | tail -1 | grep -Po '>\K.*?(?=<)' | sed 's/^ //g' | sed 's/ $//g' | sed 's/^$/-/g')
+RC=$(echo "${RAW}" | head -7 | tail -1 | grep -Po '>\K.*?(?=<)' | sed 's/^ //g' | sed 's/ $//g' | sed 's/^$/-/g')
+AC=$(echo "${RAW}" | head -9 | tail -1 | grep -Po '>\K.*?(?=<)' | sed 's/^ //g' | sed 's/ $//g' | sed 's/^$/-/g')
 
 if [[ ! -z ${TC} ]]; then
 	if [[ -f ${LASTUPDATEFILE} ]]; then
