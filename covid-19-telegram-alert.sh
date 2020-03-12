@@ -28,14 +28,14 @@ function sendTelegram() {
 	curl -s "https://api.telegram.org/bot${TELEGRAM_API_KEY}/sendMessage?chat_id=${TELEGRAM_CHAT_ID}&parse_mode=Markdown&text=${urldata}%20-%20Source%20github.com%2Fpanophan"
 }
 
-RAW=$(curl -s "https://www.worldometers.info/coronavirus/" | sed 's/<tr/\n<tr/g' | grep "${COUNTRY}" | grep ^'<tr' | sed 's/<td/\n<td/g' | grep -v '> </td>' | sed 's/> />/g' | sed 's/ </</g' | sed 's/<!--//g' | grep -Po '>\K.*?(?=<)' | sed ':a;N;$!ba;s/\n/|/g')
+RAW=$(curl -s "https://www.worldometers.info/coronavirus/" | sed 's/<tr/\n<tr/g' | grep "${COUNTRY}" | grep '<tr style="">' | sed 's/<td/\n<td/g' | grep ^'<td' | sed 's/<!--//g' | sed 's/-->//g')
 
-TC=$(echo ${RAW} | awk -F '|' '{print $2}')
-NC=$(echo ${RAW} | awk -F '|' '{print $4}')
-TD=$(echo ${RAW} | awk -F '|' '{print $5}')
-ND=$(echo ${RAW} | awk -F '|' '{print $6}')
-RC=$(echo ${RAW} | awk -F '|' '{print $7}')
-AC=$(echo ${RAW} | awk -F '|' '{print $8}')
+TC=$(echo "${RAW}" | head -2 | tail -1 | grep -Po '>\K.*?(?=<)')
+NC=$(echo "${RAW}" | head -4 | tail -1 | grep -Po '>\K.*?(?=<)')
+TD=$(echo "${RAW}" | head -5 | tail -1 | grep -Po '>\K.*?(?=<)')
+ND=$(echo "${RAW}" | head -6 | tail -1 | grep -Po '>\K.*?(?=<)')
+RC=$(echo "${RAW}" | head -7 | tail -1 | grep -Po '>\K.*?(?=<)')
+AC=$(echo "${RAW}" | head -9 | tail -1 | grep -Po '>\K.*?(?=<)')
 
 if [[ ! -z ${TC} ]]; then
 	if [[ -f ${LASTUPDATEFILE} ]]; then
